@@ -1,5 +1,5 @@
 import React from 'react';
-import TaskCard from './TaskCard';
+import TaskCard from './taskcard';
 
 const TaskList = ({ tasks, onToggle }) => {
   if (tasks.length === 0) {
