@@ -79,3 +79,5 @@ const TaskCard = ({ task, onToggle }) => {
     </div>
   );
 };
+
+export default TaskCard;
