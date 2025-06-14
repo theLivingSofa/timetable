@@ -101,3 +101,20 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Toggle done status of a task
+app.patch('/api/tasks/:id/toggle', async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    task.done = !task.done;
+    await task.save();
+
+    res.json(task);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to toggle task status' });
+  }
+});
+

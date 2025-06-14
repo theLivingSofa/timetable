@@ -39,7 +39,11 @@ const TaskCard = ({ task, onToggle }) => {
 
   return (
     <div
-      onClick={() => onToggle(task._id)}
+      onClick={() => {
+        console.log("Clicked task:", task._id);
+        onToggle(task._id);
+    }}
+
       className={`flex justify-between items-center p-4 rounded-lg shadow-md cursor-pointer transition-all text-white ${bgColor}`}
     >
       <div className="flex flex-col">
