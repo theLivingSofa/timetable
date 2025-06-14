@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 // const TaskCard = ({ task, onToggle }) => {
 //   return (
@@ -60,22 +60,27 @@ import React from 'react';
 // };
 
 // export default TaskCard;
-const TaskCard = ({ task, onToggle }) => {
-  const now = new Date();
-  const taskTime = new Date(`${task.date}T${task.time}`);
-  const isOverdue = !task.done && now > taskTime;
+import React from 'react';
+import dayjs from 'dayjs';
 
-  let bgColor = "bg-white";
-  if (task.done) bgColor = "bg-green-600 text-white";
-  else if (isOverdue) bgColor = "bg-red-600 text-white";
+const TaskCard = ({ task, onToggle }) => {
+  const now = dayjs();
+  const taskTime = dayjs(`${task.date}T${task.time}`);
+  const isOverdue = !task.done && taskTime.isBefore(now);
+
+  let bgColor = "bg-gray-800"; // Default dark
+  if (task.done) bgColor = "bg-green-600";
+  else if (isOverdue) bgColor = "bg-red-600";
 
   return (
     <div
       onClick={() => onToggle(task._id)}
-      className={`cursor-pointer ${bgColor} p-3 rounded-lg shadow`}
+      className={`cursor-pointer ${bgColor} text-white p-4 rounded-lg shadow transition duration-200 hover:scale-[1.01]`}
     >
-      <p className="text-lg font-semibold">{task.task}</p>
-      <p className="text-sm opacity-80">{task.time}</p>
+      <div className="flex justify-between items-center">
+        <p className="text-lg font-semibold">{task.task}</p>
+        <span className="text-sm font-mono opacity-75">{task.time}</span>
+      </div>
     </div>
   );
 };
