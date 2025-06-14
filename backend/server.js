@@ -123,6 +123,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const Task = require('./models/task');
+const dayjs = require('dayjs');
 
 dotenv.config();
 
@@ -168,17 +169,16 @@ app.post('/api/tasks', async (req, res) => {
       const start = new Date(startDate);
 
       for (let i = 0; i < 365; i++) {
-        const date = new Date(start);
-        date.setDate(start.getDate() + i);
+  const dateStr = dayjs(start).add(i, 'day').format('YYYY-MM-DD');
 
-        tasks.push(new Task({
-          userId,
-          time,
-          task,
-          done: false,
-          date: date.toISOString().split('T')[0], // "YYYY-MM-DD"
-        }));
-      }
+  tasks.push(new Task({
+    userId,
+    time,
+    task,
+    done: false,
+    date: dateStr,
+  }));
+}
 
       await Task.insertMany(tasks);
       res.status(201).json({ message: '365 tasks created' });
