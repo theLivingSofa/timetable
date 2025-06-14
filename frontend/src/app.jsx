@@ -165,30 +165,30 @@ const App = () => {
     fetchTasks();
   }, [selectedDate, userId]);
 
-  const handleAddTask = async () => {
-    if (!task || !time) return;
+//   const handleAddTask = async () => {
+//     if (!task || !time) return;
 
-    try {
-      await fetch("https://timetable-psie.onrender.com/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          task,
-          time,
-          date: selectedDate,
-          repeatYear,
-        }),
-      });
+//     try {
+//       await fetch("https://timetable-psie.onrender.com/api/tasks", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({
+//           userId,
+//           task,
+//           time,
+//           date: selectedDate,
+//           repeatYear,
+//         }),
+//       });
 
-      setTask("");
-      setTime("");
-      setRepeatYear(false);
-      fetchTasks();
-    } catch (err) {
-      console.error("Failed to add task:", err);
-    }
-  };
+//       setTask("");
+//       setTime("");
+//       setRepeatYear(false);
+//       fetchTasks();
+//     } catch (err) {
+//       console.error("Failed to add task:", err);
+//     }
+//   };
 
 //   const handleToggleDone = async (id) => {
 //     setTasks((prev) =>
@@ -199,6 +199,36 @@ const App = () => {
 //       method: "PATCH",
 //     });
 //   };
+
+const handleAddTask = async () => {
+  if (!task || !time) return;
+
+  try {
+    const formattedDate = dayjs(selectedDate).format("YYYY-MM-DD");
+    const normalizedTime = dayjs(`${formattedDate}T${time}`).format("HH:mm");
+
+    await fetch("https://timetable-psie.onrender.com/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId,
+        task,
+        time: normalizedTime,
+        date: formattedDate,
+        repeatYear,
+      }),
+    });
+
+    setTask("");
+    setTime("");
+    setRepeatYear(false);
+    fetchTasks();
+  } catch (err) {
+    console.error("Failed to add task:", err);
+  }
+};
+
+
 const handleToggleDone = async (taskId) => {
   setTasks((prev) =>
     prev.map((t) => (t._id === taskId ? { ...t, done: !t.done } : t))
