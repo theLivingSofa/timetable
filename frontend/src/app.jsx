@@ -12,7 +12,7 @@ const App = () => {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/tasks/${userId}?date=${selectedDate}`);
+      const res = await fetch(`https://timetable-psie.onrender.com/api/tasks/${userId}?date=${selectedDate}`);
       const data = await res.json();
       setTasks(data);
     } catch (err) {
@@ -30,7 +30,7 @@ const App = () => {
     try {
       const formattedDate = dayjs(selectedDate).format("YYYY-MM-DD");
 
-      await fetch("http://localhost:3000/api/tasks", {
+      await fetch("https://timetable-psie.onrender.com/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,7 +52,7 @@ const App = () => {
   };
 
   const handleToggleDone = async (id) => {
-  await fetch(`https://your-render-url.onrender.com/api/tasks/${id}/toggle`, {
+  await fetch(`https://timetable-psie.onrender.com/api/tasks/${id}/toggle`, {
     method: "PATCH",
   });
   fetchTasks(); // refresh task list

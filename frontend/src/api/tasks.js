@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api/tasks';
+const BASE_URL = 'https://timetable-psie.onrender.com/api/tasks';
 
 export const getTasks = async (userId) => {
   const res = await axios.get(`${BASE_URL}/${userId}`);
