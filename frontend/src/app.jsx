@@ -190,15 +190,27 @@ const App = () => {
     }
   };
 
-  const handleToggleDone = async (id) => {
-    setTasks((prev) =>
-      prev.map((t) => (t._id === id ? { ...t, done: !t.done } : t))
-    );
+//   const handleToggleDone = async (id) => {
+//     setTasks((prev) =>
+//       prev.map((t) => (t._id === id ? { ...t, done: !t.done } : t))
+//     );
 
-    fetch(`https://timetable-psie.onrender.com/api/tasks/${id}/toggle`, {
-      method: "PATCH",
-    });
-  };
+//     fetch(`https://timetable-psie.onrender.com/api/tasks/${id}/toggle`, {
+//       method: "PATCH",
+//     });
+//   };
+const handleToggleDone = async (taskId) => {
+  setTasks((prev) =>
+    prev.map((t) => (t._id === taskId ? { ...t, done: !t.done } : t))
+  );
+
+  await fetch(`https://timetable-psie.onrender.com/api/status/${taskId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, date: selectedDate }),
+  });
+};
+
 
   const isToday = selectedDate === dayjs().format("YYYY-MM-DD");
 
