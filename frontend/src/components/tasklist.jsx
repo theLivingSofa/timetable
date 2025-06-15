@@ -68,8 +68,11 @@ const TaskList = ({ tasks, onToggle, selectedDate }) => {
           onToggle={onToggle}
           selectedDate={selectedDate} // ✅ Pass selected date
         />
+        
       ))}
+      
     </div>
+    
   );
 };
 

@@ -988,6 +988,7 @@ import AuthForm from "./components/AuthForm";
 import { auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import dayjs from "dayjs";
+import { createEvents } from 'ics';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -1053,6 +1054,46 @@ const App = () => {
       console.error("Failed to add task:", err);
     }
   };
+
+  const handleExportICS = () => {
+  if (!tasks.length) return alert("No tasks to export!");
+
+  const events = tasks.map((task) => {
+    const [hour, minute] = task.time.split(":").map(Number);
+    const [year, month, day] = task.date.split("-").map(Number); // note: use task.date, not selectedDate
+
+    const event = {
+      start: [year, month, day, hour, minute],
+      duration: { minutes: 30 },
+      title: task.task,
+      description: task.done ? "Completed" : "Pending",
+    };
+
+    // 🌀 Repeat daily for 1 year (if repeatDaily flag is true)
+    if (task.repeatDaily || task.repeatYear) {
+      event.recurrenceRule = `FREQ=DAILY;COUNT=365`;
+    }
+
+    return event;
+  });
+
+  createEvents(events, (error, value) => {
+    if (error) {
+      console.error("ICS generation failed:", error);
+      return;
+    }
+
+    const blob = new Blob([value], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Tasks-${selectedDate}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+};
 
   const handleToggleDone = async (taskId) => {
     if (!userId) return;
@@ -1167,7 +1208,7 @@ const App = () => {
           />
         </div>
 
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -1183,7 +1224,42 @@ const App = () => {
           >
             Add Task
           </button>
-        </div>
+
+          <button
+            onClick={handleExportICS}
+            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded mt-4"
+          >
+            Export to Calendar (.ics)
+          </button>
+
+        </div> */}
+        <div className="flex flex-col md:flex-row md:justify-between items-center gap-4">
+  <label className="flex items-center gap-2 text-sm">
+    <input
+      type="checkbox"
+      checked={repeatYear}
+      onChange={() => setRepeatYear(!repeatYear)}
+    />
+    Repeat daily for 1 year
+  </label>
+
+  <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+    <button
+      onClick={handleAddTask}
+      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-full md:w-auto"
+    >
+      Add Task
+    </button>
+
+    <button
+      onClick={handleExportICS}
+      className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded w-full md:w-auto"
+    >
+      Export to Calendar (.ics)
+    </button>
+  </div>
+</div>
+
       </div>
 
       {/* Task List */}
