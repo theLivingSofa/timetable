@@ -569,6 +569,8 @@ const App = () => {
     });
     return () => unsubscribe();
   }, []);
+//   console.log("Local time:", dayjs().format());
+
 
   const fetchTasks = async () => {
     if (!userId) return;
@@ -757,5 +759,6 @@ const App = () => {
     </div>
   );
 };
+
 
 export default App;

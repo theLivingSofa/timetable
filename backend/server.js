@@ -296,6 +296,25 @@ app.get('/api/tasks/:userId', async (req, res) => {
 });
 
 // 🧠 POST create a new task (just one task stored)
+// app.post('/api/tasks', async (req, res) => {
+//   const { userId, time, task, repeatYear, date } = req.body;
+
+//   try {
+//     const newTask = new Task({
+//       userId,
+//       time,
+//       task,
+//       repeatDaily: repeatYear || false,
+//     });
+
+//     await newTask.save();
+//     res.status(201).json(newTask);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Failed to create task' });
+//   }
+// });
+
 app.post('/api/tasks', async (req, res) => {
   const { userId, time, task, repeatYear, date } = req.body;
 
@@ -304,6 +323,7 @@ app.post('/api/tasks', async (req, res) => {
       userId,
       time,
       task,
+      date, // ✅ Save the date
       repeatDaily: repeatYear || false,
     });
 
