@@ -172,7 +172,9 @@ const TaskCard = ({ task, onToggle, selectedDate }) => {
   const isToday = task.date === selectedDate;
 
   const taskTime = dayjs(`${task.date}T${task.time}`);
-  const isOverdue = !task.done && isToday && taskTime.isBefore(now);
+  // const isOverdue = !task.done && isToday && taskTime.isBefore(now);
+  const isOverdue = !task.done && taskTime.isBefore(dayjs());
+
 
   // Optional debug
   console.log({
