@@ -87,13 +87,49 @@
 
 // export default TaskCard;
 
+// import React from 'react';
+// import dayjs from 'dayjs';
+
+// const TaskCard = ({ task, onToggle }) => {
+//   const now = dayjs();
+//   const taskTime = dayjs(`${task.date}T${task.time}`);
+//   const isOverdue = !task.done && taskTime.isBefore(now);
+
+//   // Background color logic
+//   let bgColor = "bg-gray-800"; // default dark
+//   if (task.done) bgColor = "bg-green-600";
+//   else if (isOverdue) bgColor = "bg-red-600";
+
+//   return (
+//     <div
+//       onClick={() => onToggle(task._id)}
+//       className={`cursor-pointer ${bgColor} text-white p-4 rounded-lg shadow transition duration-200 hover:scale-[1.01]`}
+//     >
+//       <div className="flex justify-between items-center">
+//         <div>
+//           <p className={`text-lg font-semibold ${task.done ? "line-through opacity-60" : ""}`}>
+//             {task.task}
+//           </p>
+//           <p className="text-sm text-gray-300 mt-1 font-mono">⏰ {task.time}</p>
+//         </div>
+//         <div className="text-xl">
+//           {task.done ? "✅" : isOverdue ? "⏱️" : "⬜"}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TaskCard;
+
 import React from 'react';
 import dayjs from 'dayjs';
 
 const TaskCard = ({ task, onToggle }) => {
   const now = dayjs();
   const taskTime = dayjs(`${task.date}T${task.time}`);
-  const isOverdue = !task.done && taskTime.isBefore(now);
+  const isToday = task.date === now.format('YYYY-MM-DD');
+  const isOverdue = !task.done && isToday && taskTime.isBefore(now);
 
   // Background color logic
   let bgColor = "bg-gray-800"; // default dark
@@ -121,4 +157,3 @@ const TaskCard = ({ task, onToggle }) => {
 };
 
 export default TaskCard;
-
