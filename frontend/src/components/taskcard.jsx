@@ -127,6 +127,13 @@ import dayjs from 'dayjs';
 
 const TaskCard = ({ task, onToggle }) => {
   const now = dayjs();
+  console.log({
+  task: task.task,
+  taskDate: task.date,
+  currentDate: dayjs().format('YYYY-MM-DD'),
+  isToday: task.date === dayjs().format('YYYY-MM-DD'),
+});
+
   const taskTime = dayjs(`${task.date}T${task.time}`);
   const isToday = task.date === now.format('YYYY-MM-DD');
   const isOverdue = !task.done && isToday && taskTime.isBefore(now);
