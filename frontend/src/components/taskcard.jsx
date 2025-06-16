@@ -164,24 +164,77 @@
 // };
 
 // export default TaskCard;
+// import React from 'react';
+// import dayjs from 'dayjs';
+
+// const TaskCard = ({ task, onToggle, selectedDate }) => {
+//   const now = dayjs();
+//   const isToday = task.date === selectedDate;
+
+//   const taskTime = dayjs(`${task.date}T${task.time}`);
+//   const isOverdue = !task.done && isToday && taskTime.isBefore(now);
+
+//   // Optional debug
+//   console.log({
+//     task: task.task,
+//     taskDate: task.date,
+//     selectedDate,
+//     isToday,
+//     now: now.format(),
+//     taskTime: taskTime.format()
+//   });
+
+//   // Background color logic
+//   let bgColor = "bg-gray-800";
+//   if (task.done) bgColor = "bg-green-600";
+//   else if (isOverdue) bgColor = "bg-red-600";
+
+//   return (
+//     <div
+//       onClick={() => onToggle(task._id)}
+//       className={`cursor-pointer ${bgColor} text-white p-4 rounded-lg shadow transition duration-200 hover:scale-[1.01]`}
+//     >
+//       <div className="flex justify-between items-center">
+//         <div>
+//           <p className={`text-lg font-semibold ${task.done ? "line-through opacity-60" : ""}`}>
+//             {task.task}
+//           </p>
+//           <p className="text-sm text-gray-300 mt-1 font-mono">⏰ {task.time}</p>
+//         </div>
+//         <div className="text-xl">
+//           {task.done ? "✅" : isOverdue ? "⏱️" : "⬜"}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TaskCard;
 import React from 'react';
 import dayjs from 'dayjs';
 
 const TaskCard = ({ task, onToggle, selectedDate }) => {
   const now = dayjs();
-  const isToday = task.date === selectedDate;
+  const selected = dayjs(selectedDate);
+  const taskDateTime = dayjs(`${selectedDate}T${task.time}`);
 
-  const taskTime = dayjs(`${task.date}T${task.time}`);
-  const isOverdue = !task.done && isToday && taskTime.isBefore(now);
+  const isPastDay = selected.isBefore(now, 'day');
+  const isToday = selected.isSame(now, 'day');
+  const isPastTimeToday = isToday && taskDateTime.isBefore(now);
 
-  // Optional debug
+  const isOverdue = !task.done && (isPastTimeToday || isPastDay);
+
+  // Optional debug log
   console.log({
     task: task.task,
-    taskDate: task.date,
+    repeatDaily: task.repeatDaily,
+    taskTime: task.time,
     selectedDate,
-    isToday,
     now: now.format(),
-    taskTime: taskTime.format()
+    isPastDay,
+    isPastTimeToday,
+    done: task.done,
+    isOverdue
   });
 
   // Background color logic
